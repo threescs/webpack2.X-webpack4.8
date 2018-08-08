@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>手动webpack2.5 升到4.8版本</title>
+</head>
+
+<body>
+    <!-- 将公司的webpack2升级到4,折腾了一下午,不废话 下面是总结 
+            "webpack": "2.5.1",
+            "webpack-dev-server": "2.4.5"
+        上面是项目之前用的版本,webpack-deb-server 作用是建立一个node本地服务器做代理,用过本地的Localhost向要请求的服务器做转发,起到一个跨域请求作用
+        
+        更新的包
+        extract-text-webpack-plugin
+        webpack
+        webpack-dev-server
+
+
+        //问题 1.TypeError: compilation.mainTemplate.applyPluginsWaterfall is not a function
+        网上有很多说是下载 webpack-contrib/html-webpack-plugin 这个官方临时插件解决，但是当我去下的时候发现已经下不了了，很遗憾！
+        过去的解决办法npm install webpack-contrib/html-webpack-plugin -D
+        现在的解决办法npm install html-webpack-plugin@3.2.0 -D
+
+
+        //问题 2.Cannot read property 'babel' of undefined
+        npm install babel-loader@7 -D
+
+
+        //问题 3.新增了mode/--mode参数来表示是开发还是生产，mode有两个可选值：development和production，production不支持监听，production侧重于打包后的文件大小，development侧重于构建的速度。
+        如果不去设置 mode 默认是生产环境
+
+
+        //问题 4.用到了清除每次编译成的/dist包 clean-webpack-plugin
+
+
+        //问题 5.文件大小的门槛 会报warning 设置成
+                    performance: {
+            hints: false
+            }
+        总结: 
+        1.官方不再支持node4以下的版本，依赖node的环境版本>=6.11.5，当然考虑到最佳的es6特性实现，建议node版本可以升级到V8.9.4或以上版本
+        
+        2.webpack4中提供的mode有两个值：development和production，默认值是 production。mode是我们为减小生产环境构建体积以及节约开发环境的构建时间提供的一种优化方案，提供对应的构建参数项的默认开启或关闭，降低配置成本。
+
+        3.ExtractTextWebpackPlugin调整，建议选用新的CSS文件提取插件mini-css-extract-plugin
+        
+    -->
+    <script>
+        module: {
+                rules: [
+                    // less 和 css 等合并在一块处理
+                    { // 自定义 less 主题
+                        test: /\.(css|less)$/,
+                        use: [{
+                                loader: "style-loader"
+                            }, {
+                                loader: "css-loader"
+                            }, {
+                                loader: "less-loader",
+                                options: {
+                                    modifyVars: theme // 处理 antd 主题的配置
+                                }]
+                        },
+                        // 文件处理
+                        {
+                            test: /\.(png|jpg|gif)$/,
+                            use: [{
+                                loader: 'url-loader',
+                                options: { // 这里的options选项参数可以定义多大的图片转换为base64
+                                    limit: 10000, // 表示小于50kb的图片转为base64,大于50kb的是路径
+                                    // outputPath:'images' //定义输出的图片文件夹
+                                }
+                            }]
+                        },
+                        {
+                            test: /\.(ttf|eot|svg|woff)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+                            use: [{
+                                loader: 'url-loader',
+                                options: { // 这里的options选项参数可以定义多大的图片转换为base64
+                                    limit: 10000, // 表示小于50kb的图片转为base64,大于50kb的是路径
+                                    // outputPath:'images' //定义输出的图片文件夹
+                                }
+                            }]
+                        },
+                    ]
+                }
+    </script>
+</body>
+
+</html>
