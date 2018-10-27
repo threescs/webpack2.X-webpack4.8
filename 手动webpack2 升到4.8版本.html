@@ -9,11 +9,11 @@
 </head>
 
 <body>
-    <!-- 将公司的webpack2升级到4,折腾了一下午,不废话 下面是总结 
+    <!-- 将公司的webpack2升级到4,折腾了一下午,不废话 下面是总结
             "webpack": "2.5.1",
             "webpack-dev-server": "2.4.5"
         上面是项目之前用的版本,webpack-deb-server 作用是建立一个node本地服务器做代理,用过本地的Localhost向要请求的服务器做转发,起到一个跨域请求作用
-        
+
         更新的包
         extract-text-webpack-plugin
         webpack
@@ -41,13 +41,18 @@
                     performance: {
             hints: false
             }
-        总结: 
+        // 问题 6.style-loader和css-loader书写位置不能错，并跟新url-loader@1+file-loader@1
+        描述：
+        {test: /\.css$/, use: ['style-loader','css-loader']},
+        npm install url-loader@1 -D
+        npm install file-loader@1 -D
+        总结:
         1.官方不再支持node4以下的版本，依赖node的环境版本>=6.11.5，当然考虑到最佳的es6特性实现，建议node版本可以升级到V8.9.4或以上版本
-        
+
         2.webpack4中提供的mode有两个值：development和production，默认值是 production。mode是我们为减小生产环境构建体积以及节约开发环境的构建时间提供的一种优化方案，提供对应的构建参数项的默认开启或关闭，降低配置成本。
 
         3.ExtractTextWebpackPlugin调整，建议选用新的CSS文件提取插件mini-css-extract-plugin
-        
+
     -->
     <script>
         module: {
