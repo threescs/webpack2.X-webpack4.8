@@ -42,6 +42,11 @@
             hints: false
             }
         // 问题 6.style-loader和css-loader书写位置不能错，并跟新url-loader@1+file-loader@1
+        // 问题7 .webpack使用extract-text-webpack-plugin打包时提示错误Use Chunks.groupsIterable and filter by instanceof Entryp
+            npm install --save-dev extract-text-webpack-plugin@next 
+            会下载到+ extract-text-webpack-plugin@4.0.0-beta.0 
+            然后在打包就正常了
+            
         描述：
         {test: /\.css$/, use: ['style-loader','css-loader']},
         npm install url-loader@1 -D 
